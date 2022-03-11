@@ -85,7 +85,7 @@ class ViewController: UIViewController {
         if digitLabel.text!.count > 1 {
         
         
-            if digitLabel.text!.hasSuffix(".") || digitLabel.text!.hasSuffix("1") || digitLabel.text!.hasSuffix("2") || digitLabel.text!.hasSuffix("3") || digitLabel.text!.hasSuffix("4") || digitLabel.text!.hasSuffix("5") || digitLabel.text!.hasSuffix("6") || digitLabel.text!.hasSuffix("7") || digitLabel.text!.hasSuffix("8") || digitLabel.text!.hasSuffix("9") || digitLabel.text!.hasSuffix("0") && digitLabel.text != "0" || digitLabel.text![digitLabel.text!.index(digitLabel.text!.startIndex, offsetBy: digitLabel.text!.count-2)] == "(" || digitLabel.text![digitLabel.text!.index(digitLabel.text!.startIndex, offsetBy: digitLabel.text!.count-2)] == ")" || resultLabel.text == "ERROR" {
+            if digitLabel.text!.hasSuffix(".") || digitLabel.text!.hasSuffix("1") || digitLabel.text!.hasSuffix("2") || digitLabel.text!.hasSuffix("3") || digitLabel.text!.hasSuffix("4") || digitLabel.text!.hasSuffix("5") || digitLabel.text!.hasSuffix("6") || digitLabel.text!.hasSuffix("7") || digitLabel.text!.hasSuffix("8") || digitLabel.text!.hasSuffix("9") || digitLabel.text!.hasSuffix("0") && digitLabel.text != "0" || digitLabel.text![digitLabel.text!.index(digitLabel.text!.startIndex, offsetBy: digitLabel.text!.count-2)] == "(" || resultLabel.text == "ERROR" {
             
             } else {
                 buttonProcess(digit: "(")
