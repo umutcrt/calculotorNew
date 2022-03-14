@@ -99,7 +99,7 @@ class ViewController: UIViewController {
         }
     }
     @IBAction func parenthesesRight(_ sender: Any) {
-        if paranthesesLeftCount <= paranthesesRightCount || digitLabel.text!.hasSuffix("(") || digitLabel.text!.hasSuffix(".") || digitLabel.text![digitLabel.text!.index(digitLabel.text!.startIndex, offsetBy: digitLabel.text!.count-2)] == "(" || digitLabel.text![digitLabel.text!.index(digitLabel.text!.startIndex, offsetBy: digitLabel.text!.count-2)] == ")" || resultLabel.text == "ERROR"{} else {
+        if paranthesesLeftCount <= paranthesesRightCount || digitLabel.text!.hasSuffix("(") || digitLabel.text!.hasSuffix(".") || digitLabel.text![digitLabel.text!.index(digitLabel.text!.startIndex, offsetBy: digitLabel.text!.count-2)] == "(" || digitLabel.text![digitLabel.text!.index(digitLabel.text!.startIndex, offsetBy: digitLabel.text!.count-2)] == ")" || resultLabel.text == "ERROR" || digitLabel.text!.hasSuffix("+") || digitLabel.text!.hasSuffix("-") || digitLabel.text!.hasSuffix("*") || digitLabel.text!.hasSuffix("/") {} else {
             buttonProcess(digit: ")")
             paranthesesRightCount += 1
         }
@@ -113,9 +113,7 @@ class ViewController: UIViewController {
                 digitLabel.text! += resultLabel.text!
                 }
             }
-            if !digitLabel.text!.hasSuffix(")") && !digitLabel.text!.contains(".") {
-                digitLabel.text! += ".0"
-            }
+            
             digitLabel.text! += process
         }
     }
@@ -135,7 +133,7 @@ class ViewController: UIViewController {
     @IBAction func buttonX(_ sender: Any) {
         if resultLabel.text == "ERROR" {
         }
-        if digitLabel.text! == "0" && resultLabel.text! == "0" {}
+        else if digitLabel.text! == "0" && resultLabel.text! == "0" {}
         else {
             adjusting(process: "x")
         }
@@ -143,7 +141,7 @@ class ViewController: UIViewController {
     @IBAction func buttonSlash(_ sender: Any) {
         if resultLabel.text == "ERROR" {
         }
-        if digitLabel.text! == "0" && resultLabel.text! == "0" {}
+        else if digitLabel.text! == "0" && resultLabel.text! == "0" {}
         else {
             adjusting(process: "/")
         }
@@ -153,6 +151,10 @@ class ViewController: UIViewController {
         resultLabel.text! = "0"
         paranthesesLeftCount = 0
         paranthesesRightCount = 0
+        textArray.removeAll()
+        answerArray.removeAll()
+        finalAnswer.removeAll()
+        texter.removeAll()
     }
     @IBAction func buttonNegative(_ sender: Any) {
         if resultLabel.text == "ERROR" {
@@ -165,7 +167,7 @@ class ViewController: UIViewController {
         }
     }
     @IBAction func resultGet(_ sender: Any) {
-        if resultLabel.text == "ERROR" {
+        if resultLabel.text == "ERROR" || resultLabel.text == "0" || resultLabel.text == "-0" || resultLabel.text == "+0"{
         } else {
         if digitLabel.text!.hasSuffix("+") || digitLabel.text!.hasSuffix("-") || digitLabel.text!.hasSuffix("x") || digitLabel.text!.hasSuffix("/") || digitLabel.text!.hasSuffix("(") || digitLabel.text!.hasSuffix(")") {
             digitLabel.text! += resultLabel.text!
@@ -197,31 +199,63 @@ class ViewController: UIViewController {
     @IBAction func buttonEqual(_ sender: Any) {
         if digitLabel.text!.hasSuffix("+") || digitLabel.text!.hasSuffix("-") || digitLabel.text!.hasSuffix("x") || digitLabel.text!.hasSuffix("/") || digitLabel.text!.hasSuffix(".") || resultLabel.text == "ERROR" || digitLabel.text!.hasSuffix("(") || paranthesesLeftCount != paranthesesRightCount {
         } else {
-            if !digitLabel.text!.hasSuffix(")") && !digitLabel.text!.contains(".") {
-                digitLabel.text! += ".0"
+            
+            if digitLabel.text!.hasSuffix("+") || digitLabel.text!.hasSuffix("-") || digitLabel.text!.hasSuffix("x") || digitLabel.text!.hasSuffix("/") || digitLabel.text!.hasSuffix(".") || digitLabel.text!.hasSuffix("(") {
+            } else {
+                
+                digitLabel.text! += "="
             }
+            
             digitLabel.text = digitLabel.text!.replacingOccurrences(of: "x", with: "*")
             
             //DotError
             mathMethod()
+            print(finalAnswer)
             
             if resultLabel.text! == "ERROR" {} else {
-         // error handling
-            let expn = NSExpression(format: digitLabel.text!)
-            resultLabel.text = "\(expn.expressionValue(with: nil, context: nil) as! Double)"
-            digitLabel.text = "0"
-            paranthesesLeftCount = 0
-            paranthesesRightCount = 0
+         
+                
+            let expn = NSExpression(format: finalAnswer)
+               
+                print(expn)
+                //bug var
+                var resultView = "\(expn.expressionValue(with: nil, context: nil) as? Double)"
+                if resultView == "nil"{
+                    resultLabel.text! = "ERROR"
+                    textArray.removeAll()
+                    answerArray.removeAll()
+                    finalAnswer.removeAll()
+                    texter.removeAll()
+                } else {
+                    if resultView.contains(".0") {
+                        resultView.removeLast(3)
+                        resultView.removeFirst(9)
+                    }
+                    else if resultView != "ERROR"{
+                        resultView.removeLast()
+                        resultView.removeFirst(9)
+                    }
+                    
+                    resultLabel.text! = resultView
+                    digitLabel.text = "0"
+                    paranthesesLeftCount = 0
+                    paranthesesRightCount = 0
+                    textArray.removeAll()
+                    answerArray.removeAll()
+                    finalAnswer.removeAll()
+                }
+                
             }
         }
     }
+    var finalAnswer = ""
+    var digit: [String] = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."]
+    var textArray: [String] = []
+    var answerArray: [String] = []
+    var texter = ""
     //DotError
     func mathMethod() {
-        var digit: [String] = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."]
-        var textArray: [String] = []
-        var answerArray: [String] = []
         var finalText = digitLabel.text!
-        var texter = ""
         for i in finalText{
             textArray.append("\(i)")
         }
@@ -231,16 +265,29 @@ class ViewController: UIViewController {
                     resultLabel.text! = "ERROR"
                     textArray.removeAll()
                     answerArray.removeAll()
+                    finalAnswer.removeAll()
+                    texter.removeAll()
                 }
                 else {
                     texter += j
                 }
             }
             else {
+                if j == "/" && !texter.contains("."){
+                    texter += ".0"
+                }
+                if j != "=" {
                 answerArray.append(texter)
                 answerArray.append(j)
                 texter = ""
+                } else {
+                    answerArray.append(texter)
+                    texter = ""
+                }
             }
+        }
+        for x in answerArray {
+            finalAnswer += x
         }
     }
 }
